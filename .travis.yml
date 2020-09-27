@@ -8,5 +8,13 @@ before_install:
 script:
     - docker run -e CI=true axolotling/complex-test npm test
 
-# after_success:
-#     - 
+after_success:
+    - docker build -t axolotling/complex-client ./client
+    - docker build -t axolotling/complex-nginx ./nginx
+    - docker build -t axolotling/complex-server ./server
+    - docker build -t axolotling/complex-worker ./worker
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    - docker push axolotling/complex-client
+    - docker push axolotling/complex-nginx
+    - docker push axolotling/complex-server
+    - docker push axolotling/complex-worker
